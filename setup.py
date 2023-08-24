@@ -9,7 +9,7 @@ from addons import __version__ as version
 setup(
 	name="addons",
 	version=version,
-	description="Addons",
+	description="addons",
 	author="DAS",
 	author_email="DAS@gmail.com",
 	packages=find_packages(),

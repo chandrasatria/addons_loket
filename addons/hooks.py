@@ -3,7 +3,7 @@ from . import __version__ as app_version
 app_name = "addons"
 app_title = "Addons"
 app_publisher = "DAS"
-app_description = "Addons"
+app_description = "addons"
 app_email = "DAS@gmail.com"
 app_license = "MIT"
 
