@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2023-10-26 02:31:43.602844",
+ "default_view": "List",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "account",
+  "cost_center",
+  "project",
+  "debit",
+  "credit",
+  "text",
+  "event_name_long",
+  "event_id",
+  "acquiring_code",
+  "event_owner_code"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "columns": 2,
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Account",
+   "oldfieldname": "account",
+   "oldfieldtype": "Link",
+   "options": "Loket Account",
+   "print_width": "250px",
+   "reqd": 1,
+   "search_index": 1,
+   "width": "250px"
+  },
+  {
+   "default": ":Company",
+   "description": "If Income or Expense",
+   "fieldname": "cost_center",
+   "fieldtype": "Data",
+   "label": "Cost Center",
+   "oldfieldname": "cost_center",
+   "oldfieldtype": "Link",
+   "print_hide": 1,
+   "print_width": "180px",
+   "width": "180px"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Data",
+   "label": "Project"
+  },
+  {
+   "bold": 1,
+   "columns": 2,
+   "fieldname": "debit",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Debit",
+   "print_hide_if_no_value": 1
+  },
+  {
+   "bold": 1,
+   "columns": 2,
+   "fieldname": "credit",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Credit",
+   "print_hide_if_no_value": 1
+  },
+  {
+   "fieldname": "text",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Text"
+  },
+  {
+   "fieldname": "event_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event ID"
+  },
+  {
+   "fieldname": "acquiring_code",
+   "fieldtype": "Data",
+   "label": "Acquiring Code"
+  },
+  {
+   "fieldname": "event_name_long",
+   "fieldtype": "Data",
+   "label": "Event Name Long"
+  },
+  {
+   "fieldname": "event_owner_code",
+   "fieldtype": "Data",
+   "label": "Event Owner Code"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-26 02:49:28.101448",
+ "modified_by": "Administrator",
+ "module": "Addons",
+ "name": "Closing Detail Entry",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

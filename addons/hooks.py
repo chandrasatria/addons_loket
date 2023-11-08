@@ -102,13 +102,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#	"*": {
-#		"on_update": "method",
-#		"on_cancel": "method",
-#		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Closing Document Log": {
+		"on_submit": "addons.addons.doctype.closing_document_log.closing_document_log.create_je"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
