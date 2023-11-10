@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "autoname": "field:closing_doc",
+ "creation": "2023-11-10 18:42:07.412625",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "closing_doc",
+  "date",
+  "status",
+  "event_id",
+  "detail_list"
+ ],
+ "fields": [
+  {
+   "fieldname": "closing_doc",
+   "fieldtype": "Data",
+   "label": "Closing Document",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "event_id",
+   "fieldtype": "Data",
+   "label": "Event ID"
+  },
+  {
+   "fieldname": "detail_list",
+   "fieldtype": "Table",
+   "label": "Detail",
+   "options": "CLD Entry"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-10 18:42:07.412625",
+ "modified_by": "Administrator",
+ "module": "Addons",
+ "name": "CLD Log",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

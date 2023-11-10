@@ -103,8 +103,8 @@ app_license = "MIT"
 # Hook on document methods and events
 
 doc_events = {
-	"Closing Document Log": {
-		"on_submit": "addons.addons.doctype.closing_document_log.closing_document_log.create_je"
+	"CLD Log": {
+		"after_insert": "addons.addons.doctype.cld_log.cld_log.create_je"
 	}
 }
 

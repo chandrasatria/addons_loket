@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
-class ClosingDocumentLog(Document):
+class CLDLog(Document):
 	pass
 
 @frappe.whitelist()
@@ -31,7 +31,7 @@ def patch_saldo_awal():
 
 @frappe.whitelist()
 def enqueue_create_saldo_awal():
-	frappe.enqueue(method="addons.addons.doctype.closing_document_log.closing_document_log.create_saldo_awal",timeout=60000, queue='long')
+	frappe.enqueue(method="addons.addons.doctype.cld_log.cld_log.create_saldo_awal",timeout=60000, queue='long')
 
 @frappe.whitelist()
 def create_saldo_awal():
@@ -207,10 +207,10 @@ def repair_gl_entry_untuk_je(docname):
 @frappe.whitelist()
 def debug_create_je():
 
-	list_je = frappe.db.sql(""" SELECT name FROM `tabClosing Document Log` WHERE docstatus = 1 and `date` = "2023-11-02" """)
+	list_je = frappe.db.sql(""" SELECT name FROM `tabCLD Log` WHERE `date` = "2023-11-02" """)
 
 	for row in list_je:
-		self = frappe.get_doc("Closing Document Log",row[0])
+		self = frappe.get_doc("CLD Log",row[0])
 		# create JE
 		create_je(self,"validate")
 		frappe.db.commit()

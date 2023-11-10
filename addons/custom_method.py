@@ -24,6 +24,10 @@ from os.path import isfile, join
 from datetime import datetime,timedelta
 
 @frappe.whitelist()
+def en_lakukan_pull_node():
+	frappe.enqueue(method="addons.custom_method.lakukan_pull_node",timeout=18000, queue='long')
+
+@frappe.whitelist()
 def lakukan_pull_node():
 	url = get_url().replace(":8000","")
 	print(str(url))
@@ -51,8 +55,21 @@ def custom_pull_from_node(event_producer):
 	print(str(last_update))
 	print('mau get config')
 	(doctypes, mapping_config, naming_config) = get_config(event_producer.producer_doctypes)
-	
-	updates = get_updates(producer_site, last_update, doctypes)
+	nama_db = "_a2f4a9ab74539819"
+	# updates = get_updates(producer_site, last_update, doctypes)
+	updates =  frappe.db.sql(""" SELECT 
+			`update_type`, 
+			`ref_doctype`,
+			`docname`, `data`, `name`, `creation` 
+			FROM `{}`.`tabEvent Update Log`  
+			WHERE
+			creation >= "{}"
+			GROUP BY docname, `data`
+			
+			
+			ORDER BY creation ASC
+	""".format(nama_db,last_update), as_dict=1,debug=1)
+
 		
 	for update in updates:
 		print(str(update))
