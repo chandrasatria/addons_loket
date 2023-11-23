@@ -11,13 +11,11 @@ class ClosingDocumentLog(Document):
 def get_url_2():
 	check = frappe.db.sql(""" SELECT name FROM `tabEvent Producer` LIMIT 1 """)
 	if len(check) > 0:
-		for row in check:
-			if row[0] == "http://10.20.0.4:81":
-				return row[0].replace(":81","")
-			elif row[0] == "http://10.20.0.4":
-				return row[0] + ":81"
+		from frappe.utils import cstr
+		site_name = cstr(frappe.local.site)
+		return site_name
 	else:
-		return "http://10.20.0.4:81"
+		return "http://10.20.0.3"
 
 
 @frappe.whitelist()
@@ -86,7 +84,7 @@ def create_saldo_awal():
 
 @frappe.whitelist()
 def create_je(self,method):
-	if get_url_2() == "http://10.20.0.4":
+	if get_url_2() == "p-erp.intra.loket.id":
 		# create JE
 
 		event_id = self.detail_list[0].event_id

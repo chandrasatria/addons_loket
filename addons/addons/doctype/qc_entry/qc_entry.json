@@ -1,19 +1,25 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "QCM-.#####",
- "creation": "2023-10-23 19:12:00.045817",
+ "autoname": "field:quotation_name",
+ "creation": "2023-11-15 22:20:52.402098",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "quotation_name",
   "posting_date",
   "customer",
-  "commission_item",
-  "amended_from"
+  "commission_item"
  ],
  "fields": [
+  {
+   "fieldname": "quotation_name",
+   "fieldtype": "Data",
+   "label": "Quotation Name",
+   "unique": 1
+  },
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -21,34 +27,23 @@
   },
   {
    "fieldname": "customer",
-   "fieldtype": "Link",
-   "label": "Customer",
-   "options": "Customer"
+   "fieldtype": "Data",
+   "label": "Customer"
   },
   {
    "fieldname": "commission_item",
    "fieldtype": "Table",
    "label": "Commission Item",
-   "options": "Loket Quotation Item"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Quotation Commission",
-   "print_hide": 1,
-   "read_only": 1
+   "options": "QC Item"
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2023-11-15 22:18:49.313484",
+ "modified": "2023-11-15 22:20:52.402098",
  "modified_by": "Administrator",
  "module": "Addons",
- "name": "Quotation Commission",
- "naming_rule": "Expression (old style)",
+ "name": "QC Entry",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

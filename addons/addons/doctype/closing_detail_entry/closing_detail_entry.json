@@ -17,7 +17,8 @@
   "event_name_long",
   "event_id",
   "acquiring_code",
-  "event_owner_code"
+  "event_owner_code",
+  "customer"
  ],
  "fields": [
   {
@@ -97,11 +98,16 @@
    "fieldname": "event_owner_code",
    "fieldtype": "Data",
    "label": "Event Owner Code"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-10-26 02:49:28.101448",
+ "modified": "2023-11-16 11:19:52.357745",
  "modified_by": "Administrator",
  "module": "Addons",
  "name": "Closing Detail Entry",

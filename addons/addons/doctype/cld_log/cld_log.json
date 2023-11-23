@@ -8,9 +8,12 @@
  "engine": "InnoDB",
  "field_order": [
   "closing_doc",
+  "source_data",
   "date",
+  "provit_segment",
   "status",
   "event_id",
+  "acquiring_code",
   "detail_list"
  ],
  "fields": [
@@ -44,11 +47,26 @@
    "fieldtype": "Table",
    "label": "Detail",
    "options": "CLD Entry"
+  },
+  {
+   "fieldname": "source_data",
+   "fieldtype": "Data",
+   "label": "Source Data"
+  },
+  {
+   "fieldname": "acquiring_code",
+   "fieldtype": "Data",
+   "label": "Acquiring Code"
+  },
+  {
+   "fieldname": "provit_segment",
+   "fieldtype": "Data",
+   "label": "Provit Segment"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-10 18:42:07.412625",
+ "modified": "2023-11-22 23:40:35.650264",
  "modified_by": "Administrator",
  "module": "Addons",
  "name": "CLD Log",

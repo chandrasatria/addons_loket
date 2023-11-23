@@ -24,6 +24,126 @@ from os.path import isfile, join
 from datetime import datetime,timedelta
 
 @frappe.whitelist()
+def buat_project_dari_cld():
+	list_cld = frappe.db.sql(""" SELECT cld.event_id,cld.provit_segment,cle.event_name_long 
+		FROM `tabCLD Log` cld JOIN `tabCLD Entry` cle ON cle.parent = cld.name 
+		GROUP BY cld.event_id
+		 """)
+	for row in list_cld:
+		try:
+			new_project_doc = frappe.get_doc("Project",{"project_name":str(row[2]).replace('"','')})
+			new_project_doc.custom_event_id = row[0]
+			new_project_doc.project_type = row[1]
+			new_project_doc.save()
+			frappe.db.commit()
+			print("sudah ada {}".format(row[0]))
+		except:
+			print("create baru {}".format(row[0]))
+			new_project_doc = frappe.new_doc("Project")
+			new_project_doc.custom_event_id = row[0]
+			new_project_doc.project_type = row[1]
+			new_project_doc.project_name = str(row[2]).replace('"','')
+			new_project_doc.save()
+			frappe.db.commit()
+		try:
+			event_doc = frappe.get_doc("Event ID", row[0])
+			event_doc.project = new_project_doc.name
+			event_doc.project_name = new_project_doc.project_name
+			event_doc.save()
+		except:
+			event_doc = frappe.new_doc("Event ID")
+			event_doc.event_id = row[0]
+			event_doc.event_name = row[2]
+			event_doc.project = new_project_doc.name
+			event_doc.project_name = new_project_doc.project_name
+			event_doc.save()
+
+
+
+@frappe.whitelist()
+def debug_patch_cost_center():
+
+	list_closing = frappe.db.sql(""" SELECT name FROM `tabJournal Entry` WHERE  custom_provit_segment IS NOT NULL """)
+
+	for row_bari in list_closing:
+		
+		closing_doc = frappe.get_doc("Journal Entry", row_bari[0])
+		for row in closing_doc.accounts:
+			account_doc = frappe.get_doc("Account", row.account)
+			if account_doc.report_type == "Profit and Loss":
+				if closing_doc.custom_provit_segment == "EN":
+					row.cost_center = "Event Business Enterprise - PGLS"
+
+				elif closing_doc.custom_provit_segment == "SS":
+					row.cost_center = "Digital Business - PGLS"
+
+				elif closing_doc.custom_provit_segment == "GB":
+					row.cost_center = "Gotix Business - PGLS"
+
+				row.db_update()
+
+				if closing_doc.docstatus == 1:
+					frappe.db.sql(""" UPDATE `tabGL Entry` SET cost_center = "{}" WHERE voucher_no = "{}" and account = "{}" """.format(row.cost_center,closing_doc.name,row.account))
+					print(row_bari[0])
+
+@frappe.whitelist()
+def patch_cost_center(self,method):
+	for row in self.accounts:
+		account_doc = frappe.get_doc("Account", row.account)
+		if account_doc.report_type == "Profit and Loss":
+			if closing_doc.custom_provit_segment == "EN":
+				row.cost_center = "Event Business Enterprise - PGLS"
+
+			elif closing_doc.custom_provit_segment == "SS":
+				row.cost_center = "Digital Business - PGLS"
+
+			elif closing_doc.custom_provit_segment == "GB":
+				row.cost_center = "Gotix Business - PGLS"
+
+@frappe.whitelist()
+def patch_je():
+
+	list_je = frappe.db.sql(""" SELECT name FROM `tabJournal Entry` WHERE name LIKE "%NEO%" """)
+	for row in list_je:
+		je_doc = frappe.get_doc("Journal Entry",row[0])
+		for account in je_doc.accounts:
+			if account.account == "103010102 - TRADE RECEIVABLES ST - THIRD PARTIES - PGLS":
+				cld_doc = frappe.get_doc("CLD Log",account.custom_closing_document_log)
+				for detail in cld_doc.detail_list:
+					if detail.account == "TRADE RECEIVABLES ST - THIRD PARTIES":
+						if detail.acquiring_code == "MIDMID":
+							account.party = "PT. MIDTRANS"
+							account.db_update()
+						if detail.acquiring_code == "FSPFAS":
+							account.party = "PT. MEDIA INDONUSA"
+							account.db_update()
+						if detail.acquiring_code == "GJKDAB":
+							account.party = "PT DOMPET ANAK BANGSA"
+							account.db_update()
+						if detail.acquiring_code == "MIDBCA":
+							account.party = "PT. BANK CENTRAL ASIA TBK."
+							account.db_update()
+						if detail.acquiring_code == "MIDPER":
+							account.party = "PT. BANK PERMATA, Tbk"
+							account.db_update()
+						if detail.acquiring_code == "OFLEMP":
+							account.party = "OFFLINE EMPLOYEE"
+							account.db_update()
+						if detail.acquiring_code == "OFLEOU":
+							account.party = "OFFLINE EMPLOYEE"
+							account.db_update()
+
+
+
+@frappe.whitelist()
+def return_item(item_code):
+	return frappe.db.sql(""" SELECT name,item_name FROM `tabItem` WHERE name = "{}" """.format(item_code))
+
+@frappe.whitelist()
+def return_customer(customer_name):
+	return frappe.db.sql(""" SELECT name,customer_name FROM `tabCustomer` WHERE name = "{}" """.format(customer_name))
+	
+@frappe.whitelist()
 def en_lakukan_pull_node():
 	frappe.enqueue(method="addons.custom_method.lakukan_pull_node",timeout=18000, queue='long')
 
@@ -34,7 +154,7 @@ def lakukan_pull_node():
 	
 	list_event_producer = frappe.db.sql(""" SELECT name FROM `tabEvent Producer` """)
 	for row in list_event_producer:
-		command = """ cd /home/frappe/frappe-bench/ && bench --site site1.local execute addons.custom_method.custom_pull_from_node --args "{{'{0}'}}" """.format(row[0])
+		command = """ cd /home/frappe/frappe-bench/ && bench --site p-erp.intra.loket.id execute addons.custom_method.custom_pull_from_node --args "{{'{0}'}}" """.format(row[0])
 		os.system(command)
 		print(row[0])
 		frappe.db.commit()
@@ -55,20 +175,20 @@ def custom_pull_from_node(event_producer):
 	print(str(last_update))
 	print('mau get config')
 	(doctypes, mapping_config, naming_config) = get_config(event_producer.producer_doctypes)
-	nama_db = "_a2f4a9ab74539819"
-	# updates = get_updates(producer_site, last_update, doctypes)
-	updates =  frappe.db.sql(""" SELECT 
-			`update_type`, 
-			`ref_doctype`,
-			`docname`, `data`, `name`, `creation` 
-			FROM `{}`.`tabEvent Update Log`  
-			WHERE
-			creation >= "{}"
-			GROUP BY docname, `data`
+	nama_db = "_c2138d7e24008804"
+	updates = get_updates(producer_site, last_update, doctypes)
+	# updates =  frappe.db.sql(""" SELECT 
+	# 		`update_type`, 
+	# 		`ref_doctype`,
+	# 		`docname`, `data`, `name`, `creation` 
+	# 		FROM `{}`.`tabEvent Update Log`  
+	# 		WHERE
+	# 		creation >= "{}"
+	# 		GROUP BY docname, `data`
 			
 			
-			ORDER BY creation ASC
-	""".format(nama_db,last_update), as_dict=1,debug=1)
+	# 		ORDER BY creation ASC
+	# """.format(nama_db,last_update), as_dict=1,debug=1)
 
 		
 	for update in updates:

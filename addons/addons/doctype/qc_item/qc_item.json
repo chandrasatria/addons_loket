@@ -1,6 +1,6 @@
 {
  "actions": [],
- "creation": "2023-10-23 19:11:42.390047",
+ "creation": "2023-11-15 22:20:45.577943",
  "default_view": "List",
  "doctype": "DocType",
  "document_type": "Document",
@@ -22,6 +22,19 @@
    "in_list_view": 1,
    "label": "Item",
    "options": "Item"
+  },
+  {
+   "fieldname": "acquiring_code",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Acquiring Code"
+  },
+  {
+   "fieldname": "event_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event ID",
+   "options": "Event ID"
   },
   {
    "fieldname": "qty",
@@ -47,27 +60,14 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Percent"
-  },
-  {
-   "fieldname": "acquiring_code",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Acquiring Code"
-  },
-  {
-   "fieldname": "event_id",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Event ID",
-   "options": "Event ID"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-11-15 22:21:38.442998",
+ "modified": "2023-11-15 22:20:45.577943",
  "modified_by": "Administrator",
  "module": "Addons",
- "name": "Loket Quotation Item",
+ "name": "QC Item",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

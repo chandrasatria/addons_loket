@@ -55,10 +55,10 @@ app_license = "MIT"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-#	"methods": "addons.utils.jinja_methods",
-#	"filters": "addons.utils.jinja_filters"
-# }
+jinja = {
+	# "methods": "addons.utils.jinja_methods",
+	"filters": "addons.jinja.toTerbilang"
+}
 
 # Installation
 # ------------
@@ -105,6 +105,10 @@ app_license = "MIT"
 doc_events = {
 	"CLD Log": {
 		"after_insert": "addons.addons.doctype.cld_log.cld_log.create_je"
+	},
+	"Journal Entry":{
+		"autoname": "addons.addons.doctype.cld_log.cld_log.create_je_autoname",
+		"validate": "addons.custom_method.patch_cost_center",
 	}
 }
 
