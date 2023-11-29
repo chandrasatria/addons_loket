@@ -22,7 +22,7 @@ class InvoiceLog(Document):
 			finally:
 				customer_doc = frappe.get_doc("Customer",{"event_owner_id":self.event_owner_id})
 
-			receivable_account = "103010101 - TRADE RECEIVABLES ST - RELATED PARTIES - PGLS"
+			receivable_account = "103010399 - SALES RECEIVABLE - PGLS"
 			if customer_doc.accounts:
 				for row in customer_doc.accounts:
 					if row.company == "PT Global Loket Sejahtera":
@@ -79,7 +79,7 @@ def create_invoice_log_debug():
 		finally:
 			customer_doc = frappe.get_doc("Customer",{"event_owner_id":self.event_owner_id})
 
-		receivable_account = "103010101 - TRADE RECEIVABLES ST - RELATED PARTIES - PGLS"
+		receivable_account = "103010399 - SALES RECEIVABLE - PGLS"
 		if customer_doc.accounts:
 			for row in customer_doc.accounts:
 				if row.company == "PT Global Loket Sejahtera":
