@@ -22,6 +22,8 @@ import os
 from os import listdir
 from os.path import isfile, join
 from datetime import datetime,timedelta
+from frappe.frappeclient import FrappeClient
+
 
 @frappe.whitelist()
 def buat_project_dari_cld():
@@ -91,13 +93,13 @@ def patch_cost_center(self,method):
 	for row in self.accounts:
 		account_doc = frappe.get_doc("Account", row.account)
 		if account_doc.report_type == "Profit and Loss":
-			if closing_doc.custom_provit_segment == "EN":
+			if self.custom_provit_segment == "EN":
 				row.cost_center = "Event Business Enterprise - PGLS"
 
-			elif closing_doc.custom_provit_segment == "SS":
+			elif self.custom_provit_segment == "SS":
 				row.cost_center = "Digital Business - PGLS"
 
-			elif closing_doc.custom_provit_segment == "GB":
+			elif self.custom_provit_segment == "GB":
 				row.cost_center = "Gotix Business - PGLS"
 
 @frappe.whitelist()
@@ -159,6 +161,54 @@ def lakukan_pull_node():
 		print(row[0])
 		frappe.db.commit()
 
+
+@frappe.whitelist()
+def get_producer_site2():
+	event_pro = frappe.db.sql(""" 
+		SELECT ec.name 
+		FROM `tabEvent Producer` ec 
+		JOIN `tabEvent Producer Document Type` ecdt ON ec.name = ecdt.parent
+		WHERE ecdt.ref_doctype = "CLD Log"
+	""")
+	if len(event_pro) > 0:
+		for row in event_pro:
+			doc_event_pro = frappe.get_doc("Event Producer", row[0])
+			url = doc_event_pro.name
+			api_key = doc_event_pro.api_key
+			api_secret = doc_event_pro.get_password("api_secret")
+
+			producer_site = FrappeClient(
+				url=url,
+				api_key=api_key,
+				api_secret=api_secret,
+			)
+
+			return producer_site
+
+	return None
+
+@frappe.whitelist()
+def get_cld_not_exist():
+	producer_site = get_producer_site2()
+	if producer_site:
+
+		sql_cld = frappe.db.sql(""" SELECT GROUP_CONCAT(name) FROM `tabCLD Log` GROUP BY name """)
+		array_cld = []
+		for row in sql_cld:
+			array_cld.append(row[0])
+		
+		docs = producer_site.post_request(
+			{
+				"cmd": "interface_loket.custom.return_cld_not_exist",
+				"array_cld": str(array_cld)
+			}
+		)
+		if docs:
+			print("{}1".format(docs))
+			
+			
+
+
 @frappe.whitelist()
 def custom_pull_from_node(event_producer):
 	"""pull all updates after the last update timestamp from event producer site"""
@@ -170,13 +220,14 @@ def custom_pull_from_node(event_producer):
 	event_producer = frappe.get_doc('Event Producer', event_producer)
 	user = event_producer.user
 	producer_site = get_producer_site(event_producer.producer_url)
-	print(event_producer.producer_url)
+	
 	last_update = event_producer.get_last_update()
 	print(str(last_update))
+	get_last_cld = frappe.db.sql(""" SELECT creation FROM `tabCLD Log` ORDER BY creation LIMIT 1 """)
 	print('mau get config')
 	(doctypes, mapping_config, naming_config) = get_config(event_producer.producer_doctypes)
 	nama_db = "_c2138d7e24008804"
-	updates = get_updates(producer_site, last_update, doctypes)
+	updates = get_updates(producer_site, get_last_cld[0][0], doctypes)
 	# updates =  frappe.db.sql(""" SELECT 
 	# 		`update_type`, 
 	# 		`ref_doctype`,

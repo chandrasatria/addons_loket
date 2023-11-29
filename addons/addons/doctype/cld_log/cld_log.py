@@ -128,11 +128,22 @@ def create_je(self,method):
 				# 	new_event_doc.save()
 				# 	frappe.db.commit()
 
+				cost_center = ""
+
+				if je_doc.custom_provit_segment == "EN":
+					cost_center = "Event Business Enterprise - PGLS"
+
+				elif je_doc.custom_provit_segment == "SS":
+					cost_center = "Digital Business - PGLS"
+
+				elif je_doc.custom_provit_segment == "GB":
+					cost_center = "Gotix Business - PGLS"
+
 
 				try:
 					new_project_doc = frappe.get_doc("Project",{"custom_event_id":row.event_id})
 				except:
-					print("create baru {}".format(row[0]))
+					
 					new_project_doc = frappe.new_doc("Project")
 					new_project_doc.custom_event_id = row.event_id
 					new_project_doc.project_type = self.provit_segment
@@ -140,7 +151,7 @@ def create_je(self,method):
 					new_project_doc.save()
 					frappe.db.commit()
 				try:
-					event_doc = frappe.get_doc("Event ID", row[0])
+					event_doc = frappe.get_doc("Event ID", row.event_id)
 				except:
 					event_doc = frappe.new_doc("Event ID")
 					event_doc.event_id = row.event_id
@@ -266,7 +277,9 @@ def repair_gl_entry_untuk_je(docname):
 @frappe.whitelist()
 def debug_create_je():
 
-	list_je = frappe.db.sql(""" SELECT name FROM `tabCLD Log` where name not in (SELECT custom_closing_document_log from `tabJournal Entry` WHERE custom_closing_document_log IS NOT NULL) """)
+	list_je = frappe.db.sql(""" SELECT name FROM `tabCLD Log` 
+		where name in 
+		("CLD-1512") """)
 
 	for row in list_je:
 		self = frappe.get_doc("CLD Log",row[0])
