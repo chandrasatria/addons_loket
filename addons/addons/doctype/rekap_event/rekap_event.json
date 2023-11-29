@@ -1,0 +1,158 @@
+{
+ "actions": [],
+ "autoname": "field:event_id",
+ "creation": "2023-11-29 17:26:56.450005",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "event_id",
+  "event_name",
+  "event_owner_id",
+  "provit_segment",
+  "get_data",
+  "sales_invoice_section",
+  "list_sales_invoice",
+  "total_piutang",
+  "purchase_invoice_section",
+  "list_purchase_invoice",
+  "total_hutang",
+  "journal_entry_section",
+  "list_journal_entry",
+  "total_uang_ticket",
+  "journal_terbentuk_section",
+  "list_journal_pelunasan",
+  "total_uang_ticket_terpakai"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_id",
+   "fieldtype": "Link",
+   "label": "Event ID",
+   "options": "Event ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "get_data",
+   "fieldtype": "Button",
+   "label": "Get Data",
+   "options": "get_data"
+  },
+  {
+   "fieldname": "sales_invoice_section",
+   "fieldtype": "Section Break",
+   "label": "Sales Invoice"
+  },
+  {
+   "fieldname": "list_sales_invoice",
+   "fieldtype": "Table",
+   "label": "List Sales Invoice",
+   "options": "Rekap Event Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_piutang",
+   "fieldtype": "Currency",
+   "label": "Total Piutang",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_invoice_section",
+   "fieldtype": "Section Break",
+   "label": "Purchase Invoice"
+  },
+  {
+   "fieldname": "list_purchase_invoice",
+   "fieldtype": "Table",
+   "label": "List Purchase Invoice",
+   "options": "Rekap Event Purchase Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_hutang",
+   "fieldtype": "Currency",
+   "label": "Total Hutang",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal_entry_section",
+   "fieldtype": "Section Break",
+   "label": "Journal Entry"
+  },
+  {
+   "fieldname": "list_journal_entry",
+   "fieldtype": "Table",
+   "label": "List Journal Entry",
+   "options": "Rekap Event Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_uang_ticket",
+   "fieldtype": "Currency",
+   "label": "Total Uang Ticket",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "event_id.event_name",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "label": "Event Name"
+  },
+  {
+   "fieldname": "event_owner_id",
+   "fieldtype": "Data",
+   "label": "Event Owner ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provit_segment",
+   "fieldtype": "Data",
+   "label": "Provit Segment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal_terbentuk_section",
+   "fieldtype": "Section Break",
+   "label": "Journal Terbentuk"
+  },
+  {
+   "fieldname": "list_journal_pelunasan",
+   "fieldtype": "Table",
+   "label": "List Journal Pelunasan",
+   "options": "Rekap Event Journal Entry Pelunasan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_uang_ticket_terpakai",
+   "fieldtype": "Currency",
+   "label": "Total Uang Ticket Terpakai",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-29 19:42:12.602140",
+ "modified_by": "Administrator",
+ "module": "Addons",
+ "name": "Rekap Event",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -195,6 +195,42 @@ def create_je(self,method):
 							"custom_closing_document_log" : self.name,
 							"project" : new_project_doc.name
 						})
+
+
+				elif frappe.get_doc("Account",get_account.account_link).name == "103010303 - ACCRUED TRADE RECEIVABLES - COMMISSION - PGLS":
+
+					# check apakah ada customer
+					try:
+						customer_doc = frappe.get_doc("Customer",{"event_owner_id":row.event_owner_code})
+					except:
+						new_customer_doc = frappe.new_doc("Customer")
+						new_customer_doc.event_owner_id = row.event_owner_code
+						new_customer_doc.customer_name = row.event_owner_code
+						new_customer_doc.territory = "Indonesia"
+						new_customer_doc.tax_id = "-"
+						new_customer_doc.save()
+						frappe.db.commit()
+
+					finally:
+						customer_doc = frappe.get_doc("Customer",{"event_owner_id":row.event_owner_code})
+
+					if row.customer and row.account == "TRADE RECEIVABLES ST - THIRD PARTIES":
+						customer_doc = frappe.get_doc("Customer", row.customer)
+
+					if row.debit or row.credit:
+						je_doc.append("accounts",{
+							"account" : get_account.account_link,
+							"debit" : row.debit,
+							"debit_in_account_currency" : row.debit,
+							"credit" : row.credit,
+							"credit_in_account_currency" : row.credit,
+							"event_id" : row.event_id,
+							"custom_party_event": customer_doc.name,
+							"custom_party_type_event": "Customer",
+							"cost_center": cost_center,
+							"custom_closing_document_log" : self.name,
+							"project" : new_project_doc.name
+						})
 				elif frappe.get_doc("Account",get_account.account_link).account_type == "Payable":
 
 					# check apakah ada customer
@@ -227,6 +263,38 @@ def create_je(self,method):
 							"custom_closing_document_log" : self.name,
 							"project" : new_project_doc.name
 						})
+				elif frappe.get_doc("Account",get_account.account_link).name == "201070202 - DEPOSIT - PARTNER - PGLS":
+
+					# check apakah ada customer
+					try:
+						customer_doc = frappe.get_doc("Supplier",{"custom_event_owner_idneo_organization_id":row.event_owner_code})
+					except:
+						new_customer_doc = frappe.new_doc("Supplier")
+						new_customer_doc.custom_event_owner_idneo_organization_id = row.event_owner_code
+						new_customer_doc.supplier_name = row.event_owner_code
+						new_customer_doc.supplier_group = "All Supplier Groups"
+						new_customer_doc.territory = "Indonesia"
+						new_customer_doc.tax_id = "-"
+						new_customer_doc.save()
+						frappe.db.commit()
+
+					finally:
+						customer_doc = frappe.get_doc("Supplier",{"custom_event_owner_idneo_organization_id":row.event_owner_code})
+
+					if row.debit or row.credit:
+						je_doc.append("accounts",{
+							"account" : get_account.account_link,
+							"debit" : row.debit,
+							"debit_in_account_currency" : row.debit,
+							"credit" : row.credit,
+							"credit_in_account_currency" : row.credit,
+							"event_id" : row.event_id,
+							"custom_party_event": customer_doc.name,
+							"custom_party_type_event": "Supplier",
+							"cost_center": cost_center,
+							"custom_closing_document_log" : self.name,
+							"project" : new_project_doc.name
+						})
 				else:
 					if row.debit or row.credit:
 						je_doc.append("accounts",{
@@ -238,7 +306,7 @@ def create_je(self,method):
 							"event_id" : row.event_id,
 							"cost_center": cost_center,
 							"custom_closing_document_log" : self.name,
-							"project" : new_project_doc.name
+							"project" : new_project_doc.name,
 						})
 
 		je_doc.flags.ignore_mandatory = True

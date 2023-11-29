@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-11-29 17:50:48.512314",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "no_invoice",
+  "event_total"
+ ],
+ "fields": [
+  {
+   "fieldname": "no_invoice",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "No Journal",
+   "options": "Journal Entry"
+  },
+  {
+   "fieldname": "event_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Event Total"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-11-29 17:50:48.512314",
+ "modified_by": "Administrator",
+ "module": "Addons",
+ "name": "Rekap Event Journal Entry Pelunasan",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
