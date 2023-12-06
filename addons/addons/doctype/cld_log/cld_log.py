@@ -48,8 +48,6 @@ def create_saldo_awal():
 	
 	for row in list_yang_mau_dibuat:
 
-
-
 		je_doc = frappe.new_doc("Journal Entry")
 		je_doc.posting_date = "2023-07-31"
 		je_doc.naming_series = "SALDO-AWAL-.#######"
@@ -86,7 +84,13 @@ def create_saldo_awal():
 
 @frappe.whitelist()
 def create_je(self,method):
-	if get_url_2() == "p-erp.intra.loket.id":
+	event_pro = frappe.db.sql(""" 
+		SELECT ec.name 
+		FROM `tabEvent Producer` ec 
+		JOIN `tabEvent Producer Document Type` ecdt ON ec.name = ecdt.parent
+		WHERE ecdt.ref_doctype = "CLD Log"
+	""")
+	if len(event_pro) > 0:
 		# create JE
 
 		event_id = self.detail_list[0].event_id
@@ -108,25 +112,6 @@ def create_je(self,method):
 			if get_account.account_link:
 				account_doc = frappe.get_doc("Account",get_account.account_link)
 				company_doc = frappe.get_doc("Company", account_doc.company)
-				# check apakah ada event id
-				# try:
-				# 	new_project_doc = frappe.get_doc("Project",row.event_id)
-				# except:
-				# 	new_project_doc = frappe.new_doc("Project")
-				# 	new_project_doc.project_name = row.event_id
-				# 	new_project_doc.product_type = self.provit_segment
-				# 	new_project_doc.save()
-				# 	frappe.db.commit()
-
-				# # check apakah ada event id
-				# try:
-				# 	event_doc = frappe.get_doc("Event ID",row.event_id)
-				# except:
-				# 	new_event_doc = frappe.new_doc("Event ID")
-				# 	new_event_doc.event_name = row.event_name_long
-				# 	new_event_doc.event_id = row.event_id
-				# 	new_event_doc.save()
-				# 	frappe.db.commit()
 
 				cost_center = ""
 
@@ -136,20 +121,26 @@ def create_je(self,method):
 				elif je_doc.custom_provit_segment == "SS":
 					cost_center = "Digital Business - PGLS"
 
-				elif je_doc.custom_provit_segment == "GB":
+				elif je_doc.custom_provit_segment == "GB" or self.source_data == "G0tix":
 					cost_center = "Gotix Business - PGLS"
 
 
 				try:
 					new_project_doc = frappe.get_doc("Project",{"custom_event_id":row.event_id})
 				except:
-					
-					new_project_doc = frappe.new_doc("Project")
-					new_project_doc.custom_event_id = row.event_id
-					new_project_doc.project_type = self.provit_segment
-					new_project_doc.project_name = str(row.event_name_long).replace('"','')
-					new_project_doc.save()
-					frappe.db.commit()
+					try:
+						new_project_doc = frappe.get_doc("Project",{"project_name":str(row.event_name_long).replace('"','')})
+						new_project_doc.custom_event_id = row.event_id
+						new_project_doc.save()
+					except:
+						new_project_doc = frappe.new_doc("Project")
+						new_project_doc.custom_event_id = row.event_id
+						new_project_doc.project_type = self.provit_segment
+						new_project_doc.project_name = str(row.event_name_long).replace('"','')
+						new_project_doc.save()
+						frappe.db.commit()
+
+
 				try:
 					event_doc = frappe.get_doc("Event ID", row.event_id)
 				except:
@@ -345,14 +336,19 @@ def repair_gl_entry_untuk_je(docname):
 @frappe.whitelist()
 def debug_create_je():
 
-	list_je = frappe.db.sql(""" SELECT name FROM `tabCLD Log` 
-		where name in 
-		("CLD-1512") """)
+	list_je = frappe.db.sql(""" 
+		SELECT name FROM `tabCLD Log` 
+		WHERE name NOT IN (
+		SELECT log.name FROM `tabCLD Log` log
+		WHERE log.name IN (SELECT custom_closing_document_log FROM `tabJournal Entry`)
+		)
+		""")
 
 	for row in list_je:
 		self = frappe.get_doc("CLD Log",row[0])
 		# create JE
 		create_je(self,"validate")
+		print(row[0])
 		frappe.db.commit()
 
 

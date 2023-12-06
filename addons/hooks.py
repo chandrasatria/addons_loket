@@ -106,10 +106,16 @@ doc_events = {
 	"CLD Log": {
 		"after_insert": "addons.addons.doctype.cld_log.cld_log.create_je"
 	},
+	"Invoice Log": {
+		"after_insert": "addons.addons.doctype.invoice_log.invoice_log.create_invoice_log"
+	},
 	"Journal Entry":{
 		"autoname": "addons.addons.doctype.cld_log.cld_log.create_je_autoname",
 		"validate": "addons.custom_method.patch_cost_center",
-	}
+	},
+	"ACF Log": {
+		"after_insert": "addons.addons.doctype.acf_log.acf_log.create_je"
+	},
 }
 
 # Scheduled Tasks

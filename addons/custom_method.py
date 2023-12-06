@@ -142,6 +142,10 @@ def return_item(item_code):
 	return frappe.db.sql(""" SELECT name,item_name FROM `tabItem` WHERE name = "{}" """.format(item_code))
 
 @frappe.whitelist()
+def return_account(expense_account):
+	return frappe.db.sql(""" SELECT name FROM `tabAccount` WHERE name = "{}" """.format(expense_account))
+
+@frappe.whitelist()
 def return_customer(customer_name):
 	return frappe.db.sql(""" SELECT name,customer_name FROM `tabCustomer` WHERE name = "{}" """.format(customer_name))
 	
@@ -206,7 +210,14 @@ def get_cld_not_exist():
 		if docs:
 			print("{}1".format(docs))
 			
-			
+@frappe.whitelist()
+def check_cld(cld):
+	hasil = frappe.db.sql(""" SELECT name FROM `tabCLD Log` WHERE name = "{}" """.format(cld))
+	if len(hasil) > 0:
+		return 1
+	else:
+		return 0
+
 
 
 @frappe.whitelist()
@@ -227,7 +238,8 @@ def custom_pull_from_node(event_producer):
 	print('mau get config')
 	(doctypes, mapping_config, naming_config) = get_config(event_producer.producer_doctypes)
 	nama_db = "_c2138d7e24008804"
-	updates = get_updates(producer_site, get_last_cld[0][0], doctypes)
+	# updates = get_updates(producer_site, get_last_cld[0][0], doctypes)
+	updates = get_updates(producer_site, last_update, doctypes)
 	# updates =  frappe.db.sql(""" SELECT 
 	# 		`update_type`, 
 	# 		`ref_doctype`,
@@ -284,4 +296,20 @@ def custom_pull_from_node(event_producer):
 				
 		print(str(update.docname))
 		sync(update, producer_site, event_producer)
+		frappe.db.commit()
+
+@frappe.whitelist()
+def debug_closing_doc():
+
+
+	list_raw_data = frappe.db.sql(""" 
+		SELECT name FROM `tabCLD Log` WHERE source_data = "G0tix"
+	""")
+	for row in list_raw_data:
+		
+		new_doc = frappe.get_doc("CLD Log",row[0])
+		for row_baris in new_doc.detail_list:
+			row_baris.event_id = new_doc.event_id
+			row_baris.db_update()
+		print(row[0])
 		frappe.db.commit()
