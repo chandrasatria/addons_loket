@@ -98,6 +98,7 @@ def create_je(self,method):
 
 		for row in self.detail_list:
 			get_account = frappe.get_doc("Loket Account",row.account)
+			
 			if get_account.account_link:
 				account_doc = frappe.get_doc("Account",get_account.account_link)
 				company_doc = frappe.get_doc("Company", account_doc.company)
