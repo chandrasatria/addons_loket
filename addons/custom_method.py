@@ -24,6 +24,36 @@ from os.path import isfile, join
 from datetime import datetime,timedelta
 from frappe.frappeclient import FrappeClient
 
+@frappe.whitelist()
+def patch_cld():
+	list_cld = frappe.db.sql(""" SELECT
+		name FROM `tabJournal Entry` WHERE name IN
+	( 	"NEO-CLD-10626-07112023-00001",
+		"NEO-CLD-10627-17112023-00001",
+		"NEO-CLD-10907-21112023-00001",
+		"NEO-CLD-14032-04122023-00001" ) """)
+	
+	for row in list_cld:
+		je_doc = frappe.get_doc("Journal Entry", row[0])
+
+		je_doc.set_total_debit_credit()
+		if je_doc.difference:
+			print("{} NO".format(je_doc.name))
+		else:
+			print("YES")
+			je_doc.save()
+			if je_doc.docstatus == 1:
+				repair_gl_entry_untuk_je(je_doc.name)
+		# else:
+		# 	je_doc.submit()
+
+@frappe.whitelist()
+def repair_gl_entry_untuk_je(docname):
+	doctype = "Journal Entry"
+	docu = frappe.get_doc(doctype, docname)	
+	delete_gl = frappe.db.sql(""" DELETE FROM `tabGL Entry` WHERE voucher_no = "{}" """.format(docname))
+	docu.make_gl_entries()
+
 
 @frappe.whitelist()
 def buat_project_dari_cld():

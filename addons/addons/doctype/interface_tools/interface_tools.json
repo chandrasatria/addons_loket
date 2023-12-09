@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-09 09:48:36.150858",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "check_cld_to_journal_entry_section",
+  "get_cld_from_interface"
+ ],
+ "fields": [
+  {
+   "fieldname": "check_cld_to_journal_entry_section",
+   "fieldtype": "Section Break",
+   "label": "Check CLD to Journal Entry"
+  },
+  {
+   "fieldname": "get_cld_from_interface",
+   "fieldtype": "Button",
+   "label": "Get CLD From Interface",
+   "options": "get_cld_from_interface"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-12-09 09:51:20.684260",
+ "modified_by": "Administrator",
+ "module": "Addons",
+ "name": "Interface Tools",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
